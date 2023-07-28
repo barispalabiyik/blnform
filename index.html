@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bln form example</title>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+      }
+      .container {
+        font-family: sans-serif;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .sub-entity-row + .sub-entity-row {
+        margin-top: 10px;
+      }
+      .hidden {
+        display: none;
+      }
+      .member-input {
+        margin: 5px 20px;
+      }
+
+      /* Bootstrap-like styles for inputs */
+      input[type="text"] {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      /* Bootstrap-like styles for buttons */
+      button {
+        display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        margin-block: 0.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      button.addMemberButton {
+        background-color: #28a745;
+      }
+
+      button.addMemberButton:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Form example</h1>
+      <section class="form-container">
+        <div class="sub-entity-row">
+          <input class="sub-entity-input" type="text" />
+          <button class="addSubEntityButton">Add Sub entity</button>
+        </div>
+        <div class="sub-entities-container"></div>
+      </section>
+    </div>
+  </body>
+
+  <script>
+    let subEntityCounter = 0;
+
+    function generateSubEntityTemplate(id, value) {
+      return `<div class="sub-entity" data-id="${id}">
+    <input class="sub-entity-input" type="text" value="${value}" disabled />
+    <button class="addMemberButton">Add Member</button>
+    <div class="members-container"></div>
+  </div>`;
+    }
+
+    function generateMemberTemplate(subEntityId, memberId) {
+      return `<div class="member">
+    <input class="member-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" />
+  </div>`;
+    }
+
+    const addSubEntityButton = document.querySelector(".addSubEntityButton");
+    const subEntitiesContainer = document.querySelector(
+      ".sub-entities-container"
+    );
+
+    addSubEntityButton.addEventListener("click", () => {
+      subEntityCounter++;
+      const subEntityInput = document.querySelector(".sub-entity-input");
+      const subEntityValue = subEntityInput.value;
+      const subEntityTemplate = generateSubEntityTemplate(
+        subEntityCounter,
+        subEntityValue
+      );
+      subEntitiesContainer.insertAdjacentHTML("beforeend", subEntityTemplate);
+      subEntityInput.value = "";
+    });
+
+    subEntitiesContainer.addEventListener("click", (event) => {
+      if (event.target.classList.contains("addMemberButton")) {
+        const subEntity = event.target.closest(".sub-entity");
+        const memberId = subEntity.dataset.memberCounter || 0;
+        const membersContainer = subEntity.querySelector(".members-container");
+        const memberTemplate = generateMemberTemplate(
+          subEntity.dataset.id,
+          memberId
+        );
+        membersContainer.insertAdjacentHTML("beforeend", memberTemplate);
+        subEntity.dataset.memberCounter = Number(memberId) + 1;
+      } else if (event.target.classList.contains("addMemberDynamicButton")) {
+        const subEntity = event.target.closest(".sub-entity");
+        const memberId = subEntity.dataset.memberCounter || 0;
+        const membersContainer = subEntity.querySelector(".members-container");
+        const memberTemplate = generateMemberTemplate(
+          subEntity.dataset.id,
+          memberId
+        );
+        membersContainer.insertAdjacentHTML("beforeend", memberTemplate);
+        subEntity.dataset.memberCounter = Number(memberId) + 1;
+      }
+    });
+  </script>
+</html>
