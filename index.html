@@ -175,11 +175,11 @@
       <input placeholder="Member Name" class="member-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" />
       <select class="entity-type-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" >
         <option value="">Entity Type</option>
-        <option value="single">Single</option>
-        <option value="apartment">Apartment</option>
-        <option value="house">House</option>
-        <option value="land">Land</option>
-        <option value="commercial">Commercial</option>
+            <option value="owner">Owner</option>
+            <option value="coowner">Co-Owner</option>
+            <option value="tenant">Tenant</option>
+            <option value="member">Member</option>
+            <option value="other">Other</option>
       </select>
       <span class="ownership-row">
       <input placeholder="Ownership" class="ownership-input" type="number" name="subEntity-${subEntityId}-member-${memberId}" />
