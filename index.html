@@ -15,19 +15,9 @@
         font-family: sans-serif;
         max-width: 500px;
         margin: 0 auto;
+        padding: 20px;
       }
 
-      .sub-entity-row + .sub-entity-row {
-        margin-top: 10px;
-      }
-      .hidden {
-        display: none;
-      }
-      .member-input {
-        margin: 5px 20px;
-      }
-
-      /* Bootstrap-like styles for inputs */
       input[type="text"] {
         display: block;
         width: 100%;
@@ -43,7 +33,6 @@
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
       }
 
-      /* Bootstrap-like styles for buttons */
       button {
         display: inline-block;
         font-weight: 400;
@@ -74,6 +63,26 @@
       button.addMemberButton:hover {
         background-color: #218838;
       }
+
+      .sub-entity-row + .sub-entity-row {
+        margin-top: 10px;
+      }
+
+      .sub-entity-row {
+        display: flex;
+        align-items: center;
+        column-gap: 10px;
+      }
+
+      .sub-entity-row > input[type="text"] {
+        width: 65%;
+      }
+      .hidden {
+        display: none;
+      }
+      .member-input {
+        margin: 5px 20px;
+      }
     </style>
   </head>
   <body>
@@ -82,7 +91,7 @@
       <section class="form-container">
         <div class="sub-entity-row">
           <input class="sub-entity-input" type="text" />
-          <button class="addSubEntityButton">Add Sub entity</button>
+          <button class="addSubEntityButton">Add Sub Entity</button>
         </div>
         <div class="sub-entities-container"></div>
       </section>
