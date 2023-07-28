@@ -50,6 +50,7 @@
           border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         background-color: #007bff;
         color: #fff;
+        width: 35%;
       }
 
       button:hover {
@@ -68,13 +69,15 @@
         margin-top: 10px;
       }
 
-      .sub-entity-row {
+      .sub-entity-row,
+      .member-input-row {
         display: flex;
         align-items: center;
         column-gap: 10px;
       }
 
-      .sub-entity-row > input[type="text"] {
+      .sub-entity-row > input[type="text"],
+      .member-input-row > input[type="text"] {
         width: 65%;
       }
       .hidden {
@@ -87,7 +90,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>Form example</h1>
+      <h1>BLN Form Prototype</h1>
       <section class="form-container">
         <div class="sub-entity-row">
           <input class="sub-entity-input" type="text" />
@@ -103,8 +106,10 @@
 
     function generateSubEntityTemplate(id, value) {
       return `<div class="sub-entity" data-id="${id}">
+    <span class="member-input-row">
     <input class="sub-entity-input" type="text" value="${value}" disabled />
-    <button class="addMemberButton">Add Member</button>
+    <button class="addMemberButton">Add Member</button>  
+    </span>
     <div class="members-container"></div>
   </div>`;
     }
