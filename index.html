@@ -225,14 +225,15 @@
         <input placeholder="Sub Member Name" class="member-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" />
         <select class="entity-type-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" >
           <option value="">Sub Member Type</option>
-              <option value="owner">Owner</option>
-              <option value="coowner">Co-Owner</option>
-              <option value="tenant">Tenant</option>
-              <option value="member">Member</option>
-              <option value="other">Other</option>
+          ${entityOptions
+            .map(
+              (option) =>
+                `<option value="${option.value}">${option.text}</option>`
+            )
+            .join("")}
         </select>
         <span class="ownership-row">
-        <input placeholder="Ownership" class="ownership-input" type="number" name="subEntity-${subEntityId}-member-${memberId}" />
+        <input placeholder="Ownership" class="sub-ownership-input" type="number" name="subEntity-${subEntityId}-member-${memberId}" />
         </span>
         <button class="removeMemberButton">- Remove Sub Member</button>
       </div>
@@ -240,24 +241,32 @@
     `;
     }
 
-    function generateEntityMemberTemplate(entityName) {
+    function generateEntityMemberTemplate(
+      entityName,
+      memberName,
+      memberType,
+      memberOwnership
+    ) {
       return `
       <div class="entityMember">
-        <input placeholder="Member Name" class="member-input" type="text" name="member-${entityName}" />
-        <select class="entity-type-input" type="text" name="member-${entityName}" >
-          <option value="">Entity Type</option>
-              <option value="owner">Owner</option>
-              <option value="coowner">Co-Owner</option>
-              <option value="tenant">Tenant</option>
-              <option value="member">Member</option>
-              <option value="other">Other</option>
-        </select>
-        <span class="ownership-row">
-        <input placeholder="Ownership" class="ownership-input" type="number" name="member-${entityName}" />
-        </span>
-        <button class="removeEntityMemberButton">- Remove Entity Member</button>
-      </div>
-      <div class="sub-members-container"></div>
+      <input placeholder="Member Name" class="member-input" type="text" name="member-${entityName}" value="${memberName}" />
+      <select class="entity-type-input" type="text" name="member-${entityName}" >
+        <option value="">Member Type</option>
+        ${entityOptions
+          .map(
+            (option) =>
+              `<option value="${option.value}" ${
+                option.value === memberType ? "selected" : ""
+              }>${option.text}</option>`
+          )
+          .join("")}
+      </select>
+      <span class="ownership-row">
+      <input placeholder="Ownership" class="sub-ownership-input"  type="number" name="member-${entityName}" value="${memberOwnership}" />
+      </span>
+      <button class="removeEntityMemberButton">- Remove Entity Member</button>
+    </div>
+    <div class="sub-members-container"></div>
     `;
     }
 
@@ -276,13 +285,33 @@
     const addMemberToEntityButton = document.querySelector(
       ".addMemberToEntityButton"
     );
+    const entityMemberContainer = document.querySelector(
+      ".entityMemberContainer"
+    );
 
     addMemberToEntityButton.addEventListener("click", () => {
-      const memberTemplate = generateEntityMemberTemplate(entityName);
-      const entityMemberContainer = document.querySelector(
-        ".entityMemberContainer"
+      const memberNameInput = document.querySelector(".sub-entity-input");
+      const memberTypeInput = document.querySelector(".sub-entity-type-input");
+      const memberOwnershipInput = document.querySelector(
+        ".sub-ownership-input"
       );
+
+      const memberNameValue = memberNameInput.value;
+      const memberTypeValue = memberTypeInput.value;
+      const memberOwnershipValue = memberOwnershipInput.value;
+
+      const memberTemplate = generateEntityMemberTemplate(
+        entityName,
+        memberNameValue,
+        memberTypeValue,
+        memberOwnershipValue
+      );
+
       entityMemberContainer.insertAdjacentHTML("beforeend", memberTemplate);
+
+      memberNameInput.value = "";
+      memberTypeInput.value = "";
+      memberOwnershipInput.value = "";
     });
 
     subEntitiesContainer.addEventListener("click", (event) => {
@@ -318,10 +347,6 @@
         member.remove();
       }
     });
-
-    const entityMemberContainer = document.querySelector(
-      ".entityMemberContainer"
-    );
 
     entityMemberContainer.addEventListener("click", (event) => {
       if (event.target.classList.contains("removeEntityMemberButton")) {
