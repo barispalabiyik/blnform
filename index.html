@@ -160,19 +160,8 @@
       <section class="form-container">
         <div class="entityMemberContainer"></div>
         <div class="sub-entity-row">
-          <input
-            placeholder="Entity Name"
-            class="sub-entity-input"
-            type="text"
-          />
-          <select class="sub-entity-type-input" type="text">
-            <option value="">Entity Type</option>
-            <option value="owner">Owner</option>
-            <option value="coowner">Co-Owner</option>
-            <option value="tenant">Tenant</option>
-            <option value="member">Member</option>
-            <option value="other">Other</option>
-          </select>
+          <input placeholder="Name" class="sub-entity-input" type="text" />
+          <select class="sub-entity-type-input" type="text"></select>
           <span class="ownership-row">
             <input
               placeholder="Ownership"
@@ -193,6 +182,24 @@
     entityNameElement.textContent = entityName;
 
     let subEntityCounter = 0;
+
+    const entityOptions = [
+      { value: "", text: "Type" },
+      { value: "owner", text: "Owner" },
+      { value: "coowner", text: "Co-Owner" },
+      { value: "tenant", text: "Tenant" },
+      { value: "member", text: "Member" },
+      { value: "other", text: "Other" },
+    ];
+
+    const subEntityTypeInput = document.querySelector(".sub-entity-type-input");
+
+    entityOptions.forEach((option) => {
+      const optionElement = document.createElement("option");
+      optionElement.value = option.value;
+      optionElement.textContent = option.text;
+      subEntityTypeInput.appendChild(optionElement);
+    });
 
     function generateSubEntityTemplate(
       id,
@@ -271,6 +278,11 @@
       const subEntityValue = subEntityInput.value;
       const subEntityTypeValue = subEntityTypeInput.value;
       const subEntityOwnershipValue = subEntityOwnershipInput.value;
+
+      if (!subEntityValue) {
+        alert("Please enter a sub entity name");
+        return;
+      }
 
       const subEntityTemplate = generateSubEntityTemplate(
         subEntityCounter,
