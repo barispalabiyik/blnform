@@ -25,7 +25,7 @@
       }
       .container {
         font-family: sans-serif;
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
       }
@@ -67,21 +67,56 @@
         background-color: #0056b3;
       }
 
-      button.addMemberButton {
+      button.addMemberButton,
+      .addMemberToEntityButton {
         background-color: #28a745;
       }
 
-      button.addMemberButton:hover {
+      button.removeButton,
+      button.removeMemberButton,
+      button.removeEntityMemberButton {
+        background-color: #dc3545;
+      }
+
+      button.addMemberButton:hover,
+      .addMemberToEntityButton:hover {
         background-color: #218838;
       }
 
-      .sub-entity-row,
-      .member-input-row,
-      .member {
+      button.removeButton:hover,
+      button.removeMemberButton:hover,
+      button.removeEntityMemberButton:hover {
+        background-color: #c82333;
+      }
+
+      .sub-entity-row {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         column-gap: 10px;
         align-items: center;
+      }
+
+      .member-input-row,
+      .member,
+      .entityMember {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        column-gap: 10px;
+        align-items: center;
+      }
+
+      input.sub-ownership-input,
+      input.ownership-input {
+        padding-left: 30px;
+        width: -webkit-fill-available;
+      }
+
+      h1.entity-name {
+        padding: 10px 30px;
+        background-color: #007bff;
+        color: white;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
       }
 
       .hidden {
@@ -104,7 +139,7 @@
       .ownership-row:before {
         content: "%";
         position: absolute;
-        right: 10px;
+        left: 10px;
         top: 50%;
         transform: translateY(-50%);
         z-index: 1;
@@ -121,8 +156,9 @@
   </head>
   <body>
     <div class="container">
-      <h1>Chicago Ave</h1>
+      <h1 class="entity-name"></h1>
       <section class="form-container">
+        <div class="entityMemberContainer"></div>
         <div class="sub-entity-row">
           <input
             placeholder="Entity Name"
@@ -144,6 +180,7 @@
               type="number"
           /></span>
           <button class="addSubEntityButton">+ Add Sub Entity</button>
+          <button class="addMemberToEntityButton">+ Add Entity Member</button>
         </div>
         <div class="sub-entities-container"></div>
       </section>
@@ -151,6 +188,10 @@
   </body>
 
   <script>
+    const entityName = "Smart LLC";
+    const entityNameElement = document.querySelector(".entity-name");
+    entityNameElement.textContent = entityName;
+
     let subEntityCounter = 0;
 
     function generateSubEntityTemplate(
@@ -160,35 +201,57 @@
       ownershipValue
     ) {
       return `<div class="sub-entity" data-id="${id}">
-    <span class="member-input-row">
-    <input class="sub-entity-input" type="text" value="${nameValue}" disabled />
-    <input  class="entity-type-input" type="text" name="subEntity-${id}" value="${typeValue}" disabled />
-    <input class="ownership-input" type="number" name="subEntity-${id}" value="${ownershipValue}" disabled/>
-    <button class="addMemberButton">+ Add Member</button>  
-    </span>
-    <div class="members-container"></div>
-  </div>`;
+      <span class="member-input-row">
+      <input class="sub-entity-input" type="text" value="${nameValue}" disabled />
+      <input  class="entity-type-input" type="text" name="subEntity-${id}" value="${typeValue}" disabled />
+      <input class="ownership-input" type="number" name="subEntity-${id}" value="${ownershipValue}" disabled/>
+      <button class="addMemberButton">+ Add Sub Entity Member</button>
+      <button class="removeButton">+ Remove Sub Entity</button>
+      </span>
+      <div class="members-container"></div>
+    </div>`;
     }
 
     function generateMemberTemplate(subEntityId, memberId) {
       return `
-    <div class="member">
-      <input placeholder="Member Name" class="member-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" />
-      <select class="entity-type-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" >
-        <option value="">Entity Type</option>
-            <option value="owner">Owner</option>
-            <option value="coowner">Co-Owner</option>
-            <option value="tenant">Tenant</option>
-            <option value="member">Member</option>
-            <option value="other">Other</option>
-      </select>
-      <span class="ownership-row">
-      <input placeholder="Ownership" class="ownership-input" type="number" name="subEntity-${subEntityId}-member-${memberId}" />
-      </span>
-      <button class="addMemberDynamicButton">+ Add Share Holder</button>
-    </div>
-    <div class="sub-members-container"></div>
-  `;
+      <div class="member">
+        <input placeholder="Member Name" class="member-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" />
+        <select class="entity-type-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" >
+          <option value="">Entity Type</option>
+              <option value="owner">Owner</option>
+              <option value="coowner">Co-Owner</option>
+              <option value="tenant">Tenant</option>
+              <option value="member">Member</option>
+              <option value="other">Other</option>
+        </select>
+        <span class="ownership-row">
+        <input placeholder="Ownership" class="ownership-input" type="number" name="subEntity-${subEntityId}-member-${memberId}" />
+        </span>
+        <button class="removeMemberButton">- Remove Sub Member</button>
+      </div>
+      <div class="sub-members-container"></div>
+    `;
+    }
+
+    function generateEntityMemberTemplate(entityName) {
+      return `
+      <div class="entityMember">
+        <input placeholder="Member Name" class="member-input" type="text" name="member-${entityName}" />
+        <select class="entity-type-input" type="text" name="member-${entityName}" >
+          <option value="">Entity Type</option>
+              <option value="owner">Owner</option>
+              <option value="coowner">Co-Owner</option>
+              <option value="tenant">Tenant</option>
+              <option value="member">Member</option>
+              <option value="other">Other</option>
+        </select>
+        <span class="ownership-row">
+        <input placeholder="Ownership" class="ownership-input" type="number" name="member-${entityName}" />
+        </span>
+        <button class="removeEntityMemberButton">- Remove Entity Member</button>
+      </div>
+      <div class="sub-members-container"></div>
+    `;
     }
 
     const addSubEntityButton = document.querySelector(".addSubEntityButton");
@@ -221,6 +284,18 @@
       subEntityOwnershipInput.value = "";
     });
 
+    const addMemberToEntityButton = document.querySelector(
+      ".addMemberToEntityButton"
+    );
+
+    addMemberToEntityButton.addEventListener("click", () => {
+      const memberTemplate = generateEntityMemberTemplate(entityName);
+      const entityMemberContainer = document.querySelector(
+        ".entityMemberContainer"
+      );
+      entityMemberContainer.insertAdjacentHTML("beforeend", memberTemplate);
+    });
+
     subEntitiesContainer.addEventListener("click", (event) => {
       if (event.target.classList.contains("addMemberButton")) {
         const subEntity = event.target.closest(".sub-entity");
@@ -232,19 +307,31 @@
         );
         membersContainer.insertAdjacentHTML("beforeend", memberTemplate);
         subEntity.dataset.memberCounter = Number(memberId) + 1;
-      } else if (event.target.classList.contains("addMemberDynamicButton")) {
-        // Code to handle dynamically added "Add Member" buttons
+      }
+    });
+
+    subEntitiesContainer.addEventListener("click", (event) => {
+      if (event.target.classList.contains("removeButton")) {
         const subEntity = event.target.closest(".sub-entity");
-        const memberId = subEntity.dataset.memberCounter || 0;
-        const membersContainer = subEntity.querySelector(
-          ".sub-members-container"
-        );
-        const memberTemplate = generateMemberTemplate(
-          subEntity.dataset.id,
-          memberId
-        );
-        membersContainer.insertAdjacentHTML("beforeend", memberTemplate);
-        subEntity.dataset.memberCounter = Number(memberId) + 1;
+        subEntity.remove();
+      }
+    });
+
+    subEntitiesContainer.addEventListener("click", (event) => {
+      if (event.target.classList.contains("removeMemberButton")) {
+        const member = event.target.closest(".member");
+        member.remove();
+      }
+    });
+
+    const entityMemberContainer = document.querySelector(
+      ".entityMemberContainer"
+    );
+
+    entityMemberContainer.addEventListener("click", (event) => {
+      if (event.target.classList.contains("removeEntityMemberButton")) {
+        const member = event.target.closest(".entityMember");
+        member.remove();
       }
     });
   </script>
