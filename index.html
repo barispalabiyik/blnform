@@ -300,6 +300,11 @@
       const memberTypeValue = memberTypeInput.value;
       const memberOwnershipValue = memberOwnershipInput.value;
 
+      if (!memberNameValue || !memberTypeValue || !memberOwnershipValue) {
+        alert("Please fill all the fields");
+        return;
+      }
+
       const memberTemplate = generateEntityMemberTemplate(
         entityName,
         memberNameValue,
