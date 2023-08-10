@@ -201,22 +201,16 @@
       subEntityTypeInput.appendChild(optionElement);
     });
 
-    function generateSubEntityTemplate(
-      id,
-      nameValue,
-      typeValue,
-      ownershipValue
-    ) {
-      return `<div class="sub-entity" data-id="${id}">
+    function generateSubEntityInputTemplate(id) {
+      return `
+      <div class="sub-entity" data-id="${id}">
       <span class="member-input-row">
-      <input class="sub-entity-input" type="text" value="${nameValue}" disabled />
-      <input  class="entity-type-input" type="text" name="subEntity-${id}" value="${typeValue}" disabled />
-      <input class="ownership-input" type="number" name="subEntity-${id}" value="${ownershipValue}" disabled/>
+      <input class="sub-entity-input" type="text" name="subEntity-${id}" />
       <button class="addMemberButton">+ Add Sub Entity Member</button>
       <button class="removeButton">+ Remove Sub Entity</button>
-      </span>
-      <div class="members-container"></div>
-    </div>`;
+    </span>
+    <div class="members-container"></div>
+      `;
     }
 
     function generateMemberTemplate(subEntityId, memberId) {
@@ -267,33 +261,10 @@
     );
 
     addSubEntityButton.addEventListener("click", () => {
-      subEntityCounter++;
-      const subEntityInput = document.querySelector(".sub-entity-input");
-      const subEntityTypeInput = document.querySelector(
-        ".sub-entity-type-input"
+      subEntitiesContainer.insertAdjacentHTML(
+        "beforeend",
+        generateSubEntityInputTemplate(subEntityCounter)
       );
-      const subEntityOwnershipInput = document.querySelector(
-        ".sub-ownership-input"
-      );
-      const subEntityValue = subEntityInput.value;
-      const subEntityTypeValue = subEntityTypeInput.value;
-      const subEntityOwnershipValue = subEntityOwnershipInput.value;
-
-      if (!subEntityValue) {
-        alert("Please enter a sub entity name");
-        return;
-      }
-
-      const subEntityTemplate = generateSubEntityTemplate(
-        subEntityCounter,
-        subEntityValue,
-        subEntityTypeValue,
-        subEntityOwnershipValue
-      );
-      subEntitiesContainer.insertAdjacentHTML("beforeend", subEntityTemplate);
-      subEntityInput.value = "";
-      subEntityTypeInput.value = "";
-      subEntityOwnershipInput.value = "";
     });
 
     const addMemberToEntityButton = document.querySelector(
@@ -317,6 +288,12 @@
           subEntity.dataset.id,
           memberId
         );
+
+        if (!subEntity.dataset.id) {
+          alert("Please add a sub entity first");
+          return;
+        }
+
         membersContainer.insertAdjacentHTML("beforeend", memberTemplate);
         subEntity.dataset.memberCounter = Number(memberId) + 1;
       }
