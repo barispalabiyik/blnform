@@ -79,7 +79,8 @@
       }
 
       #sub-entity-adder button.addMemberButton:hover,
-      #sub-entity-adder.addMemberToEntityButton:hover {
+      #sub-entity-adder.addMemberToEntityButton:hover,
+      #sub-entity-adder button.addMemberToEntityButton:hover {
         background-color: #218838;
       }
 
@@ -160,16 +161,20 @@
       <section class="form-container">
         <div class="entityMemberContainer"></div>
         <div class="sub-entity-row">
-          <input placeholder="Name" class="sub-entity-input" type="text" />
+          <input
+            placeholder="Member Name"
+            class="sub-entity-input"
+            type="text"
+          />
           <select class="sub-entity-type-input" type="text"></select>
           <span class="ownership-row">
             <input
-              placeholder="Ownership"
+              placeholder="Member Ownership"
               class="sub-ownership-input"
               type="number"
           /></span>
-          <button class="addSubEntityButton">+ Add Sub Entity</button>
           <button class="addMemberToEntityButton">+ Add Entity Member</button>
+          <button class="addSubEntityButton">+ Add Sub Entity</button>
         </div>
         <div class="sub-entities-container"></div>
       </section>
@@ -184,7 +189,7 @@
     let subEntityCounter = 0;
 
     const entityOptions = [
-      { value: "", text: "Type" },
+      { value: "", text: "Member Type" },
       { value: "owner", text: "Owner" },
       { value: "coowner", text: "Co-Owner" },
       { value: "tenant", text: "Tenant" },
@@ -205,9 +210,10 @@
       return `
       <div class="sub-entity" data-id="${id}">
       <span class="member-input-row">
-      <input class="sub-entity-input" type="text" name="subEntity-${id}" />
+      
+      <input placeholder="Sub Entity Name" class="sub-entity-input" type="text" name="subEntity-${id}" />
       <button class="addMemberButton">+ Add Sub Entity Member</button>
-      <button class="removeButton">+ Remove Sub Entity</button>
+      <button class="removeButton">- Remove Sub Entity</button>
     </span>
     <div class="members-container"></div>
       `;
@@ -216,9 +222,9 @@
     function generateMemberTemplate(subEntityId, memberId) {
       return `
       <div class="member">
-        <input placeholder="Member Name" class="member-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" />
+        <input placeholder="Sub Member Name" class="member-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" />
         <select class="entity-type-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" >
-          <option value="">Entity Type</option>
+          <option value="">Sub Member Type</option>
               <option value="owner">Owner</option>
               <option value="coowner">Co-Owner</option>
               <option value="tenant">Tenant</option>
