@@ -185,9 +185,9 @@
   </body>
 
   <script>
+    // Constants
     const entityName = "Smart LLC";
-    const entityNameElement = document.querySelector(".entity-name");
-    entityNameElement.textContent = entityName;
+    document.querySelector(".entity-name").textContent = entityName;
 
     let subEntityCounter = 0;
 
@@ -199,14 +199,7 @@
       { value: "nonguarantormember", text: "Non Guarantor Member" },
     ];
 
-    const subEntityTypeInput = document.querySelector(".sub-entity-type-input");
-
-    entityOptions.forEach((option) => {
-      const optionElement = document.createElement("option");
-      optionElement.value = option.value;
-      optionElement.textContent = option.text;
-      subEntityTypeInput.appendChild(optionElement);
-    });
+    // Templates
 
     function generateSubEntityInputTemplate(id) {
       return `
@@ -272,94 +265,108 @@
     `;
     }
 
-    const addSubEntityButton = document.querySelector(".addSubEntityButton");
-    const subEntitiesContainer = document.querySelector(
-      ".sub-entities-container"
+    // Functions
+
+    populateOptions(
+      document.querySelector(".sub-entity-type-input"),
+      entityOptions
     );
 
-    addSubEntityButton.addEventListener("click", () => {
+    function populateOptions(selectElement, optionsArray) {
+      optionsArray.forEach((option) => {
+        const optionElement = document.createElement("option");
+        optionElement.value = option.value;
+        optionElement.textContent = option.text;
+        selectElement.appendChild(optionElement);
+      });
+    }
+
+    document
+      .getElementById("sub-entity-adder")
+      .addEventListener("click", function (event) {
+        switch (true) {
+          case event.target.classList.contains("addSubEntityButton"):
+            addSubEntity();
+            break;
+          case event.target.classList.contains("addMemberToEntityButton"):
+            addMemberToEntity();
+            break;
+          case event.target.classList.contains("addMemberButton"):
+            addSubEntityMember(event);
+            break;
+          case event.target.classList.contains("removeButton"):
+            removeElement(event, ".sub-entity");
+            break;
+          case event.target.classList.contains("removeMemberButton"):
+            removeElement(event, ".member");
+            break;
+          case event.target.classList.contains("removeEntityMemberButton"):
+            removeElement(event, ".entityMember");
+            break;
+        }
+      });
+
+    function addSubEntity() {
+      const subEntitiesContainer = document.querySelector(
+        ".sub-entities-container"
+      );
       subEntitiesContainer.insertAdjacentHTML(
         "beforeend",
-        generateSubEntityInputTemplate(subEntityCounter)
+        generateSubEntityInputTemplate(subEntityCounter++)
       );
-    });
+    }
 
-    const addMemberToEntityButton = document.querySelector(
-      ".addMemberToEntityButton"
-    );
-    const entityMemberContainer = document.querySelector(
-      ".entityMemberContainer"
-    );
+    function addMemberToEntity() {
+      const memberName = getValueAndReset(".sub-entity-input");
+      const memberType = getValueAndReset(".sub-entity-type-input");
+      const memberOwnership = getValueAndReset(".sub-ownership-input");
 
-    addMemberToEntityButton.addEventListener("click", () => {
-      const memberNameInput = document.querySelector(".sub-entity-input");
-      const memberTypeInput = document.querySelector(".sub-entity-type-input");
-      const memberOwnershipInput = document.querySelector(
-        ".sub-ownership-input"
-      );
-
-      const memberNameValue = memberNameInput.value;
-      const memberTypeValue = memberTypeInput.value;
-      const memberOwnershipValue = memberOwnershipInput.value;
-
-      if (!memberNameValue || !memberTypeValue || !memberOwnershipValue) {
+      if (!memberName || !memberType || !memberOwnership) {
         alert("Please fill all the fields");
         return;
       }
 
-      const memberTemplate = generateEntityMemberTemplate(
-        entityName,
-        memberNameValue,
-        memberTypeValue,
-        memberOwnershipValue
+      const entityMemberContainer = document.querySelector(
+        ".entityMemberContainer"
       );
+      entityMemberContainer.insertAdjacentHTML(
+        "beforeend",
+        generateEntityMemberTemplate(
+          entityName,
+          memberName,
+          memberType,
+          memberOwnership
+        )
+      );
+    }
 
-      entityMemberContainer.insertAdjacentHTML("beforeend", memberTemplate);
+    function addSubEntityMember(event) {
+      const subEntity = event.target.closest(".sub-entity");
+      const memberId = subEntity.dataset.memberCounter || 0;
+      const membersContainer = subEntity.querySelector(".members-container");
 
-      memberNameInput.value = "";
-      memberTypeInput.value = "";
-      memberOwnershipInput.value = "";
-    });
-
-    subEntitiesContainer.addEventListener("click", (event) => {
-      if (event.target.classList.contains("addMemberButton")) {
-        const subEntity = event.target.closest(".sub-entity");
-        const memberId = subEntity.dataset.memberCounter || 0;
-        const membersContainer = subEntity.querySelector(".members-container");
-        const memberTemplate = generateMemberTemplate(
-          subEntity.dataset.id,
-          memberId
-        );
-
-        if (!subEntity.dataset.id) {
-          alert("Please add a sub entity first");
-          return;
-        }
-
-        membersContainer.insertAdjacentHTML("beforeend", memberTemplate);
-        subEntity.dataset.memberCounter = Number(memberId) + 1;
+      if (!subEntity.dataset.id) {
+        alert("Please add a sub entity first");
+        return;
       }
-    });
 
-    subEntitiesContainer.addEventListener("click", (event) => {
-      if (event.target.classList.contains("removeButton")) {
-        const subEntity = event.target.closest(".sub-entity");
-        subEntity.remove();
-      }
-    });
+      membersContainer.insertAdjacentHTML(
+        "beforeend",
+        generateMemberTemplate(subEntity.dataset.id, memberId)
+      );
+      subEntity.dataset.memberCounter = Number(memberId) + 1;
+    }
 
-    subEntitiesContainer.addEventListener("click", (event) => {
-      if (event.target.classList.contains("removeMemberButton")) {
-        const member = event.target.closest(".member");
-        member.remove();
-      }
-    });
+    function removeElement(event, selector) {
+      const element = event.target.closest(selector);
+      element.remove();
+    }
 
-    entityMemberContainer.addEventListener("click", (event) => {
-      if (event.target.classList.contains("removeEntityMemberButton")) {
-        const member = event.target.closest(".entityMember");
-        member.remove();
-      }
-    });
+    function getValueAndReset(selector) {
+      const input = document.querySelector(selector);
+      const value = input.value;
+      input.value = "";
+      return value;
+    }
   </script>
 </html>
