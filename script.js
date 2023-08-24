@@ -67,15 +67,15 @@ const init = () => {
   }
 
   function generateEntityMemberTemplate(
-    entityName,
+    ENTITY_NAME,
     memberName,
     memberType,
     memberOwnership
   ) {
     return `
 <div class="entityMember">
-    <input placeholder="Member Name" class="member-input" type="text" name="member-${entityName}" value="${memberName}" />
-    <select class="entity-type-input" type="text" name="member-${entityName}" >
+    <input placeholder="Member Name" class="member-input" type="text" name="member-${ENTITY_NAME}" value="${memberName}" />
+    <select class="entity-type-input" type="text" name="member-${ENTITY_NAME}" >
       <option value="">Member Type</option>
       ${ENTITY_OPTIONS.map(
         (option) =>
@@ -85,7 +85,7 @@ const init = () => {
       ).join("")}
   </select>
   <span class="ownership-row">
-    <input placeholder="Ownership" class="ownership-input"  type="number" name="member-${entityName}" value="${memberOwnership}" />
+    <input placeholder="Ownership" class="ownership-input"  type="number" name="member-${ENTITY_NAME}" value="${memberOwnership}" />
   </span>
   <button class="removeEntityMemberButton">- Remove Entity Member</button>
 </div>
@@ -160,7 +160,7 @@ const init = () => {
     entityMemberContainer.insertAdjacentHTML(
       "beforeend",
       generateEntityMemberTemplate(
-        entityName,
+        ENTITY_NAME,
         memberName,
         memberType,
         memberOwnership
