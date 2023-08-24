@@ -1,28 +1,31 @@
-document.getElementById("sub-entity-adder").innerHTML = `
-            <h1 class="entity-name"></h1>
-            <section class="form-container">
-            <div class="entityMemberContainer"></div>
-            <div class="sub-entity-row">
-            <input class="sub-entity-input" placeholder="Member Name" type="text"/>
-            <select class="sub-entity-type-input" type="text"></select>
-            <span class="ownership-row">
-            <input class="sub-ownership-input" placeholder="Member Ownership" type="number"/></span>
-            <button class="addMemberToEntityButton">+ Add Entity Member</button>
-            <button class="addSubEntityButton">+ Add Sub Entity</button>
-            </div>
-            <div class="sub-entities-container"></div>
-            </section>
+const ENTITY_TEMPLATE = `
+<h1 class="entity-name"></h1>
+<section class="form-container">
+    <div class="entityMemberContainer"></div>
+    <div class="sub-entity-row">
+        <input class="sub-entity-input" placeholder="Member Name" type="text"/>
+        <select class="sub-entity-type-input" type="text"></select>
+        <span class="ownership-row">
+            <input class="sub-ownership-input" placeholder="Member Ownership" type="number"/>
+        </span>
+        <button class="addMemberToEntityButton">+ Add Entity Member</button>
+        <button class="addSubEntityButton">+ Add Sub Entity</button>
+    </div>
+    <div class="sub-entities-container"></div>
+</section>
 `;
+
+document.getElementById("sub-entity-adder").innerHTML = ENTITY_TEMPLATE;
 
 const init = () => {
   // Constants
 
-  const entityName = "Barış LLC";
-  document.querySelector(".entity-name").textContent = entityName;
+  const ENTITY_NAME = "Barış LLC";
+  document.querySelector(".entity-name").textContent = ENTITY_NAME;
 
   let subEntityCounter = 0;
 
-  const entityOptions = [
+  const ENTITY_OPTIONS = [
     { value: "", text: "Member Type" },
     { value: "llc", text: "LLC" },
     { value: "corporation", text: "Corporation" },
@@ -34,13 +37,13 @@ const init = () => {
 
   function generateSubEntityInputTemplate(id) {
     return `
-        <div class="sub-entity" data-id="${id}">
-        <span class="member-input-row">
-        <input placeholder="Sub Entity Name" class="sub-entity-input" type="text" name="subEntity-${id}" />
-        <button class="addMemberButton">+ Add Sub Entity Member</button>
-        <button class="removeButton">- Remove Sub Entity</button>
-        </span>
-        <div class="members-container"></div>
+<div class="sub-entity" data-id="${id}">
+  <span class="member-input-row">
+    <input placeholder="Sub Entity Name" class="sub-entity-input" type="text" name="subEntity-${id}" />
+    <button class="addMemberButton">+ Add Sub Entity Member</button>
+    <button class="removeButton">- Remove Sub Entity</button>
+  </span>
+<div class="members-container"></div>
         `;
   }
 
@@ -50,14 +53,12 @@ const init = () => {
   <input placeholder="Sub Member Name" class="member-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" />
   <select class="entity-type-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" >
     <option value="">Sub Member Type</option>
-    ${entityOptions
-      .map(
-        (option) => `<option value="${option.value}">${option.text}</option>`
-      )
-      .join("")}
+    ${ENTITY_OPTIONS.map(
+      (option) => `<option value="${option.value}">${option.text}</option>`
+    ).join("")}
   </select>
   <span class="ownership-row">
-  <input placeholder="Ownership" class="sub-ownership-input" type="number" name="subEntity-${subEntityId}-member-${memberId}" />
+    <input placeholder="Ownership" class="sub-ownership-input" type="number" name="subEntity-${subEntityId}-member-${memberId}" />
   </span>
   <button class="removeMemberButton">- Remove Sub Member</button>
 </div>
@@ -73,22 +74,20 @@ const init = () => {
   ) {
     return `
 <div class="entityMember">
-<input placeholder="Member Name" class="member-input" type="text" name="member-${entityName}" value="${memberName}" />
-<select class="entity-type-input" type="text" name="member-${entityName}" >
-  <option value="">Member Type</option>
-  ${entityOptions
-    .map(
-      (option) =>
-        `<option value="${option.value}" ${
-          option.value === memberType ? "selected" : ""
-        }>${option.text}</option>`
-    )
-    .join("")}
-</select>
-<span class="ownership-row">
-<input placeholder="Ownership" class="ownership-input"  type="number" name="member-${entityName}" value="${memberOwnership}" />
-</span>
-<button class="removeEntityMemberButton">- Remove Entity Member</button>
+    <input placeholder="Member Name" class="member-input" type="text" name="member-${entityName}" value="${memberName}" />
+    <select class="entity-type-input" type="text" name="member-${entityName}" >
+      <option value="">Member Type</option>
+      ${ENTITY_OPTIONS.map(
+        (option) =>
+          `<option value="${option.value}" ${
+            option.value === memberType ? "selected" : ""
+          }>${option.text}</option>`
+      ).join("")}
+  </select>
+  <span class="ownership-row">
+    <input placeholder="Ownership" class="ownership-input"  type="number" name="member-${entityName}" value="${memberOwnership}" />
+  </span>
+  <button class="removeEntityMemberButton">- Remove Entity Member</button>
 </div>
 <div class="sub-members-container"></div>
 `;
@@ -98,7 +97,7 @@ const init = () => {
 
   populateOptions(
     document.querySelector(".sub-entity-type-input"),
-    entityOptions
+    ENTITY_OPTIONS
   );
 
   function populateOptions(selectElement, optionsArray) {
