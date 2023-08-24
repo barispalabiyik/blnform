@@ -16,9 +16,12 @@ document.getElementById("sub-entity-adder").innerHTML = `
 
 const init = () => {
   // Constants
+
   const entityName = "Barış LLC";
   document.querySelector(".entity-name").textContent = entityName;
+
   let subEntityCounter = 0;
+
   const entityOptions = [
     { value: "", text: "Member Type" },
     { value: "llc", text: "LLC" },
@@ -26,7 +29,9 @@ const init = () => {
     { value: "trust", text: "Trust" },
     { value: "nonguarantormember", text: "Non Guarantor Member" },
   ];
+
   // Templates
+
   function generateSubEntityInputTemplate(id) {
     return `
         <div class="sub-entity" data-id="${id}">
@@ -38,6 +43,7 @@ const init = () => {
         <div class="members-container"></div>
         `;
   }
+
   function generateMemberTemplate(subEntityId, memberId) {
     return `
 <div class="member">
