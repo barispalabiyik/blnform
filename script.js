@@ -1,0 +1,196 @@
+document.getElementById("sub-entity-adder").innerHTML = `
+            <h1 class="entity-name"></h1>
+            <section class="form-container">
+            <div class="entityMemberContainer"></div>
+            <div class="sub-entity-row">
+            <input class="sub-entity-input" placeholder="Member Name" type="text"/>
+            <select class="sub-entity-type-input" type="text"></select>
+            <span class="ownership-row">
+            <input class="sub-ownership-input" placeholder="Member Ownership" type="number"/></span>
+            <button class="addMemberToEntityButton">+ Add Entity Member</button>
+            <button class="addSubEntityButton">+ Add Sub Entity</button>
+            </div>
+            <div class="sub-entities-container"></div>
+            </section>
+`;
+
+const init = () => {
+  // Constants
+  const entityName = "Barış LLC";
+  document.querySelector(".entity-name").textContent = entityName;
+  let subEntityCounter = 0;
+  const entityOptions = [
+    { value: "", text: "Member Type" },
+    { value: "llc", text: "LLC" },
+    { value: "corporation", text: "Corporation" },
+    { value: "trust", text: "Trust" },
+    { value: "nonguarantormember", text: "Non Guarantor Member" },
+  ];
+  // Templates
+  function generateSubEntityInputTemplate(id) {
+    return `
+        <div class="sub-entity" data-id="${id}">
+        <span class="member-input-row">
+        <input placeholder="Sub Entity Name" class="sub-entity-input" type="text" name="subEntity-${id}" />
+        <button class="addMemberButton">+ Add Sub Entity Member</button>
+        <button class="removeButton">- Remove Sub Entity</button>
+        </span>
+        <div class="members-container"></div>
+        `;
+  }
+  function generateMemberTemplate(subEntityId, memberId) {
+    return `
+<div class="member">
+  <input placeholder="Sub Member Name" class="member-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" />
+  <select class="entity-type-input" type="text" name="subEntity-${subEntityId}-member-${memberId}" >
+    <option value="">Sub Member Type</option>
+    ${entityOptions
+      .map(
+        (option) => `<option value="${option.value}">${option.text}</option>`
+      )
+      .join("")}
+  </select>
+  <span class="ownership-row">
+  <input placeholder="Ownership" class="sub-ownership-input" type="number" name="subEntity-${subEntityId}-member-${memberId}" />
+  </span>
+  <button class="removeMemberButton">- Remove Sub Member</button>
+</div>
+<div class="sub-members-container"></div>
+`;
+  }
+
+  function generateEntityMemberTemplate(
+    entityName,
+    memberName,
+    memberType,
+    memberOwnership
+  ) {
+    return `
+<div class="entityMember">
+<input placeholder="Member Name" class="member-input" type="text" name="member-${entityName}" value="${memberName}" />
+<select class="entity-type-input" type="text" name="member-${entityName}" >
+  <option value="">Member Type</option>
+  ${entityOptions
+    .map(
+      (option) =>
+        `<option value="${option.value}" ${
+          option.value === memberType ? "selected" : ""
+        }>${option.text}</option>`
+    )
+    .join("")}
+</select>
+<span class="ownership-row">
+<input placeholder="Ownership" class="ownership-input"  type="number" name="member-${entityName}" value="${memberOwnership}" />
+</span>
+<button class="removeEntityMemberButton">- Remove Entity Member</button>
+</div>
+<div class="sub-members-container"></div>
+`;
+  }
+
+  // Functions
+
+  populateOptions(
+    document.querySelector(".sub-entity-type-input"),
+    entityOptions
+  );
+
+  function populateOptions(selectElement, optionsArray) {
+    optionsArray.forEach((option) => {
+      const optionElement = document.createElement("option");
+      optionElement.value = option.value;
+      optionElement.textContent = option.text;
+      selectElement.appendChild(optionElement);
+    });
+  }
+
+  document
+    .getElementById("sub-entity-adder")
+    .addEventListener("click", function (event) {
+      switch (true) {
+        case event.target.classList.contains("addSubEntityButton"):
+          addSubEntity();
+          break;
+        case event.target.classList.contains("addMemberToEntityButton"):
+          addMemberToEntity();
+          break;
+        case event.target.classList.contains("addMemberButton"):
+          addSubEntityMember(event);
+          break;
+        case event.target.classList.contains("removeButton"):
+          removeElement(event, ".sub-entity");
+          break;
+        case event.target.classList.contains("removeMemberButton"):
+          removeElement(event, ".member");
+          break;
+        case event.target.classList.contains("removeEntityMemberButton"):
+          removeElement(event, ".entityMember");
+          break;
+      }
+    });
+
+  function addSubEntity() {
+    const subEntitiesContainer = document.querySelector(
+      ".sub-entities-container"
+    );
+    subEntitiesContainer.insertAdjacentHTML(
+      "beforeend",
+      generateSubEntityInputTemplate(subEntityCounter++)
+    );
+  }
+
+  function addMemberToEntity() {
+    const memberName = getValueAndReset(".sub-entity-input");
+    const memberType = getValueAndReset(".sub-entity-type-input");
+    const memberOwnership = getValueAndReset(".sub-ownership-input");
+
+    if (!memberName || !memberType || !memberOwnership) {
+      alert("Please fill all the fields");
+      return;
+    }
+
+    const entityMemberContainer = document.querySelector(
+      ".entityMemberContainer"
+    );
+    entityMemberContainer.insertAdjacentHTML(
+      "beforeend",
+      generateEntityMemberTemplate(
+        entityName,
+        memberName,
+        memberType,
+        memberOwnership
+      )
+    );
+  }
+
+  function addSubEntityMember(event) {
+    const subEntity = event.target.closest(".sub-entity");
+    const memberId = subEntity.dataset.memberCounter || 0;
+    const membersContainer = subEntity.querySelector(".members-container");
+
+    if (!subEntity.dataset.id) {
+      alert("Please add a sub entity first");
+      return;
+    }
+
+    membersContainer.insertAdjacentHTML(
+      "beforeend",
+      generateMemberTemplate(subEntity.dataset.id, memberId)
+    );
+    subEntity.dataset.memberCounter = Number(memberId) + 1;
+  }
+
+  function removeElement(event, selector) {
+    const element = event.target.closest(selector);
+    element.remove();
+  }
+
+  function getValueAndReset(selector) {
+    const input = document.querySelector(selector);
+    const value = input.value;
+    input.value = "";
+    return value;
+  }
+};
+
+document.addEventListener("DOMContentLoaded", init);
