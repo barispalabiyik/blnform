@@ -70,6 +70,11 @@
 #sub-entity-adder button.removeMemberButton,
 #sub-entity-adder button.removeEntityMemberButton {
     background-color: #dc3545;
+    font-size: xx-large;
+    width: fit-content;
+    font-weight: bolder;
+    line-height: 25px;
+    place-self: center;
 }
 
 #sub-entity-adder button.addMemberButton:hover,
@@ -84,6 +89,15 @@
     background-color: #c82333;
 }
 
+.sub-entity,
+.entityMember {
+    padding: 15px;
+    border: solid 0px #027bff;
+    border-radius: 10px;
+    margin-block: 25px;
+    background: #f0f0f0;
+}
+
 #sub-entity-adder .sub-entity-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -91,11 +105,17 @@
     align-items: center;
 }
 
-#sub-entity-adder .member-input-row,
+#sub-entity-adder .member-input-row {
+    display: grid;
+    grid-template-columns: 6fr 3fr 1fr 3fr;
+    column-gap: 10px;
+    align-items: center;
+}
+
 #sub-entity-adder .member,
 #sub-entity-adder .entityMember {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: 3fr 3fr 3fr 1fr;
     column-gap: 10px;
     align-items: center;
 }

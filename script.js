@@ -40,8 +40,9 @@ const init = () => {
 <div class="sub-entity" data-id="${id}">
   <span class="member-input-row">
     <input placeholder="Sub Entity Name" class="sub-entity-input" type="text" name="subEntity-${id}" />
-    <button class="addMemberButton">+ Add Sub Entity Member</button>
-    <button class="removeButton">- Remove Sub Entity</button>
+    <button class="addMemberButton">+ Add  Member</button>
+    <button class="removeButton">⊖</button>
+    <button class="addSubEntityButton">+ Add Another Sub Entity</button>
   </span>
 <div class="members-container"></div>
         `;
@@ -60,7 +61,7 @@ const init = () => {
   <span class="ownership-row">
     <input placeholder="Ownership" class="sub-ownership-input" type="number" name="subEntity-${subEntityId}-member-${memberId}" />
   </span>
-  <button class="removeMemberButton">- Remove Sub Member</button>
+  <button class="removeMemberButton">⊖</button>
 </div>
 <div class="sub-members-container"></div>
 `;
@@ -87,7 +88,7 @@ const init = () => {
   <span class="ownership-row">
     <input placeholder="Ownership" class="ownership-input"  type="number" name="member-${ENTITY_NAME}" value="${memberOwnership}" />
   </span>
-  <button class="removeEntityMemberButton">- Remove Entity Member</button>
+  <button class="removeEntityMemberButton">⊖</button>
 </div>
 <div class="sub-members-container"></div>
 `;
