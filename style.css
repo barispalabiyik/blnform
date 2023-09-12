@@ -70,11 +70,10 @@
 #sub-entity-adder button.removeMemberButton,
 #sub-entity-adder button.removeEntityMemberButton {
     background-color: #dc3545;
-    font-size: xx-large;
+    font-size: 1.5rem;
     width: fit-content;
-    font-weight: bolder;
+    font-weight: normal;
     line-height: 25px;
-    place-self: center;
 }
 
 #sub-entity-adder button.addMemberButton:hover,
@@ -89,8 +88,7 @@
     background-color: #c82333;
 }
 
-.sub-entity,
-.entityMember {
+.sub-entity {
     padding: 15px;
     border: solid 0px #027bff;
     border-radius: 10px;
@@ -107,7 +105,7 @@
 
 #sub-entity-adder .member-input-row {
     display: grid;
-    grid-template-columns: 6fr 3fr 1fr 3fr;
+    grid-template-columns: 6fr 3fr 3fr 1fr;
     column-gap: 10px;
     align-items: center;
 }
